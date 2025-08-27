@@ -2,6 +2,32 @@
 
 import { useEffect, useState } from "react";
 
+type InfoCellProps = {
+  children: React.ReactNode;
+};
+
+function InfoCell({ children }: InfoCellProps) {
+  return <td className="p-4">{children}</td>;
+}
+
+type SpecialtiesPillProps = {
+  specialty: string;
+  onClick: () => void;
+};
+function SpecialtiesPill({ specialty, onClick }: SpecialtiesPillProps) {
+  return (
+    <div className="m-2">
+      <div
+        className="bg-green-200 rounded w-fit p-2 cursor-pointer"
+        onClick={onClick}
+        title="Search by specialty"
+      >
+        {specialty}
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
   const [filteredAdvocates, setFilteredAdvocates] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -28,7 +54,7 @@ export default function Home() {
 
   return (
     <main style={{ margin: "24px" }}>
-      <h1>Solace Advocates</h1>
+      <h1 className="text-green-800 text-3xl">Solace Advocates</h1>
       <br />
       <br />
       <div>
@@ -38,6 +64,7 @@ export default function Home() {
         </p>
         <input
           style={{ border: "1px solid black" }}
+          className="w-full"
           onChange={onChange}
           value={searchTerm}
         />
@@ -45,7 +72,7 @@ export default function Home() {
       </div>
       <br />
       <br />
-      <table>
+      <table className="w-full">
         <thead>
           <tr>
             <th>First Name</th>
@@ -60,18 +87,22 @@ export default function Home() {
         <tbody>
           {filteredAdvocates.map((advocate) => {
             return (
-              <tr key={advocate.id}>
-                <td>{advocate.firstName}</td>
-                <td>{advocate.lastName}</td>
-                <td>{advocate.city}</td>
-                <td>{advocate.degree}</td>
-                <td>
+              <tr key={advocate.id} className="border">
+                <InfoCell>{advocate.firstName}</InfoCell>
+                <InfoCell>{advocate.lastName}</InfoCell>
+                <InfoCell>{advocate.city}</InfoCell>
+                <InfoCell>{advocate.degree}</InfoCell>
+                <InfoCell>
                   {advocate.specialties.map((s) => (
-                    <div key={s}>{s}</div>
+                    <SpecialtiesPill
+                      key={s}
+                      specialty={s}
+                      onClick={() => setSearchTerm(s)}
+                    />
                   ))}
-                </td>
-                <td>{advocate.yearsOfExperience}</td>
-                <td>{advocate.phoneNumber}</td>
+                </InfoCell>
+                <InfoCell>{advocate.yearsOfExperience}</InfoCell>
+                <InfoCell>{advocate.phoneNumber}</InfoCell>
               </tr>
             );
           })}

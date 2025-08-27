@@ -1,4 +1,4 @@
-import { ilike, or } from "drizzle-orm";
+import { ilike, or, sql } from "drizzle-orm";
 import db from "../../../db";
 import { advocates } from "../../../db/schema";
 
@@ -11,9 +11,9 @@ export async function GET(request: Request) {
         ilike(advocates.firstName, filterTerm),
         ilike(advocates.lastName, filterTerm),
         ilike(advocates.city, filterTerm),
-        ilike(advocates.degree, filterTerm)
-        // TODO: filter specialties jsonb column
-        // TODO: filter yearsOfExperience
+        ilike(advocates.degree, filterTerm),
+        ilike(sql`${advocates.specialties}::text`, filterTerm),
+        ilike(sql`${advocates.yearsOfExperience}::text`, filterTerm)
       )
     : undefined;
 
